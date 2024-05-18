@@ -5,9 +5,10 @@ import 'failures.dart';
 
 @immutable
 abstract class ValueObject<T> {
+  const ValueObject();
   Either<ValueFailure<T>, T> get value;
 
-  const ValueObject();
+  bool isValid() => value.isRight();
 
   @override
   bool operator ==(covariant ValueObject other) {
