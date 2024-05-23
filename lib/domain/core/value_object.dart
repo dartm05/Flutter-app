@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
- 
+
+import 'errors.dart';
 import 'failures.dart';
 
 @immutable
@@ -9,6 +10,13 @@ abstract class ValueObject<T> {
   Either<ValueFailure<T>, T> get value;
 
   bool isValid() => value.isRight();
+
+  T getOrCrash() {
+    return value.fold(
+      (failure) => throw UnexpectedValueError(failure),
+      (rightValue) => rightValue,
+    );
+  }
 
   @override
   bool operator ==(covariant ValueObject other) {
