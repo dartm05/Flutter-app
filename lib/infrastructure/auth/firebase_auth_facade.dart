@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
 
@@ -24,7 +23,7 @@ class FirebaseAuthFacade implements IAuthFacade {
     required Password password,
   }) async {
     final emailStr = emailAddress.getOrCrash();
-    final passwordStr = emailAddress.getOrCrash();
+    final passwordStr = password.getOrCrash();
 
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(
@@ -33,7 +32,7 @@ class FirebaseAuthFacade implements IAuthFacade {
       );
 
       return right(unit);
-    } on PlatformException catch (e) {
+    } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         return left(const AuthFailure.emailAlreadyInUse());
       } else {
@@ -48,7 +47,7 @@ class FirebaseAuthFacade implements IAuthFacade {
     required Password password,
   }) async {
     final emailStr = emailAddress.getOrCrash();
-    final passwordStr = emailAddress.getOrCrash();
+    final passwordStr = password.getOrCrash();
 
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
@@ -56,7 +55,7 @@ class FirebaseAuthFacade implements IAuthFacade {
         password: passwordStr,
       );
       return right(unit);
-    } on PlatformException catch (e) {
+    } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found' || e.code == 'wrong-password') {
         return left(const AuthFailure.invalidEmailAndPassword());
       } else {
