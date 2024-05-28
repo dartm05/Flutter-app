@@ -3,9 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
 
+import '../../domain/auth/user.dart';
 import '../../domain/auth/auth_failure.dart';
 import '../../domain/auth/i_auth_facade.dart';
 import '../../domain/auth/value_objects.dart';
+import 'firebase_user_mapper.dart';
 
 @Injectable(as: IAuthFacade)
 class FirebaseAuthFacade implements IAuthFacade {
@@ -81,5 +83,22 @@ class FirebaseAuthFacade implements IAuthFacade {
     return _firebaseAuth.signInWithCredential(authCredential).then(
           (value) => right(unit),
         );
+  }
+
+  @override
+  Option<DomainUser> getSignedInUser() {
+    return optionOf(
+      _firebaseAuth.currentUser?.toDomain(),
+    );
+  }
+
+  @override
+  Future<void> signOut() {
+    return Future.wait(
+      [
+        _googleSignIn.signOut(),
+        _firebaseAuth.signOut(),
+      ],
+    );
   }
 }

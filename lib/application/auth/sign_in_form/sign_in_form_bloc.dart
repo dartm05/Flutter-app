@@ -16,7 +16,7 @@ class SignInFormBloc extends Bloc<SignInFormEvent, SignInFormState> {
   final IAuthFacade _authFacade;
 
   SignInFormBloc(this._authFacade) : super(SignInFormState.initial()) {
-    on<EmailChanged>(
+    on<_EmailChanged>(
       (event, emit) {
         emit(
           state.copyWith(
@@ -26,7 +26,7 @@ class SignInFormBloc extends Bloc<SignInFormEvent, SignInFormState> {
         );
       },
     );
-    on<PasswordChanged>(
+    on<_PasswordChanged>(
       (event, emit) {
         emit(
           state.copyWith(
@@ -36,19 +36,19 @@ class SignInFormBloc extends Bloc<SignInFormEvent, SignInFormState> {
         );
       },
     );
-    on<SignInWithEmailAndPasswordPressed>(
+    on<_SignInWithEmailAndPasswordPressed>(
       (event, emit) async {
         await _performActionOnAuthFacadeWithEmailAndPassword(
             _authFacade.signInWithEmailAndPassword, emit);
       },
     );
-    on<RegisterWithEmailAndPasswordPressed>(
+    on<_RegisterWithEmailAndPasswordPressed>(
       (event, emit) async {
         await _performActionOnAuthFacadeWithEmailAndPassword(
             _authFacade.registerWithEmailAndPassword, emit);
       },
     );
-    on<SignInWithGooglePressed>(
+    on<_SignInWithGooglePressed>(
       (event, emit) async {
         emit(
           state.copyWith(
